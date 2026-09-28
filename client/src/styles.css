@@ -75,6 +75,12 @@ button.link:hover { background: none; text-decoration: underline; }
   transition: box-shadow 0.15s ease;
 }
 .card:hover { box-shadow: 0 6px 20px rgba(0, 30, 43, 0.08); }
+.card.highlight { animation: card-flash 2.5s ease-out; border-color: var(--spring); }
+@keyframes card-flash {
+  0%   { box-shadow: 0 0 0 4px var(--spring), 0 0 24px rgba(0, 237, 100, 0.55); background: #e6fdf0; }
+  60%  { box-shadow: 0 0 0 3px rgba(0, 237, 100, 0.6); background: #f2fef7; }
+  100% { box-shadow: none; background: var(--white); }
+}
 .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .card-top { display: flex; justify-content: space-between; align-items: center; }
 .category {

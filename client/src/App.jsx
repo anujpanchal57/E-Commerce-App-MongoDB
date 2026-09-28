@@ -41,7 +41,7 @@ function ProductForm({ initial, onClose, onSaved }) {
       const res = form._id
         ? await api(`/products/${form._id}`, { method: 'PUT', body: JSON.stringify(payload) })
         : await api('/products', { method: 'POST', body: JSON.stringify(payload) });
-      onSaved(res?.mongo);
+      onSaved(res?.mongo, res?.product?._id);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -75,11 +75,11 @@ function ProductForm({ initial, onClose, onSaved }) {
   );
 }
 
-function ProductCard({ p, onEdit, onDelete }) {
+function ProductCard({ p, onEdit, onDelete, highlighted }) {
   const [expanded, setExpanded] = useState(false);
   const isLong = (p.description || '').length > 90;
   return (
-    <div className="card">
+    <div className={`card${highlighted ? ' highlight' : ''}`}>
       <div className="card-body">
         <div className="card-top">
           <span className="category">{p.category}</span>
@@ -117,6 +117,7 @@ export default function App() {
   const [editing, setEditing] = useState(null); // null | EMPTY | product
   const [lastQuery, setLastQuery] = useState(null);
   const [panelOpen, setPanelOpen] = useState(true);
+  const [highlightedId, setHighlightedId] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -159,6 +160,7 @@ export default function App() {
         <button onClick={() => setEditing(EMPTY_FORM)}>+ Add Product</button>
       </header>
 
+
       <form className="toolbar" onSubmit={submitSearch}>
         <input
           value={q}
@@ -189,7 +191,7 @@ export default function App() {
 
       <div className="grid">
         {data.items.map((p) => (
-          <ProductCard key={p._id} p={p} onEdit={setEditing} onDelete={onDelete} />
+          <ProductCard key={p._id} p={p} onEdit={setEditing} onDelete={onDelete} highlighted={p._id === highlightedId} />
         ))}
         {!loading && !data.items.length && !error && <p>No products found.</p>}
       </div>
@@ -206,10 +208,14 @@ export default function App() {
         <ProductForm
           initial={editing._id ? editing : null}
           onClose={() => setEditing(null)}
-          onSaved={async (mongo) => {
+          onSaved={async (mongo, id) => {
             setEditing(null);
             await load();
             if (mongo) setLastQuery(mongo); // show the mutation, not the refresh
+            if (id) {
+              setHighlightedId(id);
+              setTimeout(() => setHighlightedId(null), 2500);
+            }
           }}
         />
       )}
