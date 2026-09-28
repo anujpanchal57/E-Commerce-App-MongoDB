@@ -1,6 +1,6 @@
 # Mongo E-commerce Demo
 
-A small, locally-run e-commerce product-listing app demonstrating **CRUD, full-text search, semantic (vector) search, and sorting** on MongoDB. Built per `APP_SPEC.md`.
+A small, locally-run e-commerce product-listing app demonstrating **CRUD, full-text search, semantic (vector) search, and sorting** on MongoDB.
 
 ## Prerequisites
 
